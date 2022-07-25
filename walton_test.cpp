@@ -10,10 +10,19 @@ static PyObject* waltonTestCalculate
     PyObject* args
 )
 {
+    // Fetch the 2 double parameters.
+    double argOne;
+    double argTwo;
+    if (!PyArg_ParseTuple(args, "dd", &argOne, &argTwo))
+    {
+        // Parameters are wrong.
+        return NULL;
+    }
 
     // Return success.
-    int returnCode = 1;
-    return PyLong_FromLong(returnCode);
+    return PyFloat_FromDouble(argOne * argTwo);
+    // int returnCode = 1;
+    // return PyLong_FromLong(returnCode);
 }
 
 
