@@ -1,3 +1,12 @@
+# Folders.
+bin/
+build/
+dist/
+obj/
+
+# Files
+files.txt
+
 # Prerequisites
 *.d
 
