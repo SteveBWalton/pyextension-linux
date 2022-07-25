@@ -2,6 +2,8 @@
 #include <Python.h>
 
 
+#define STEVE 2
+
 
 /// Defines function calculate() that will be exported to Python as walton_test.calculate().
 static PyObject* waltonTestCalculate
@@ -52,5 +54,14 @@ static struct PyModuleDef waltonTestDefinition =
 PyMODINIT_FUNC PyInit_walton_test(void)
 {
     Py_Initialize();
-    return PyModule_Create(&waltonTestDefinition);
+
+    // Create the module.
+    PyObject* module = PyModule_Create(&waltonTestDefinition);
+
+    // Add a constants to the module.
+    PyModule_AddIntConstant(module, "TEST", 1);
+    PyModule_AddIntMacro(module, STEVE);
+
+    // Return success.
+    return module;
 }
