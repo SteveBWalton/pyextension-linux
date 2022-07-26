@@ -22,7 +22,7 @@ The --record files.txt is not actually required but shows the files installed in
 ## Uninstall
 
 ```
-sudo pip uninstall walton-test
+sudo pip uninstall walton_module
 ```
 
 You can install subsequent builds without uninstalling the previous version.
