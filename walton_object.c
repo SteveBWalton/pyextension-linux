@@ -219,7 +219,7 @@ static PyObject* waltonName
 /// Defintion of the methods of the Walton object.
 static PyMethodDef waltonMethods[] =
 {
-    {"name", (PyCFunction)waltonName, METH_NOARGS, "Return the name, combining the first and last name" },
+    {"name", (PyCFunction)waltonName, METH_NOARGS, "Return the name, combining the first and last name." },
     {NULL}  /* Sentinel */
 };
 
@@ -229,7 +229,7 @@ static PyTypeObject waltonType =
 {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "walton_module.Walton",
-    .tp_doc = PyDoc_STR("Walton objects"),
+    .tp_doc = PyDoc_STR("Description of Walton objects."),
     .tp_basicsize = sizeof(WaltonObject),
     .tp_itemsize = 0,
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,

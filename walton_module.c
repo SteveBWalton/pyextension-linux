@@ -32,7 +32,7 @@ static PyObject* waltonModuleCalculate
 /// Register of functions within this module.
 static PyMethodDef waltonModuleMethods[] =
 {
-    {"calculate", waltonModuleCalculate, METH_VARARGS, "Description of calculate()."},
+    {"calculate", waltonModuleCalculate, METH_VARARGS, "Description of the calculate() function."},
     {NULL, NULL, 0, NULL}
 };
 
@@ -42,9 +42,12 @@ static PyMethodDef waltonModuleMethods[] =
 static struct PyModuleDef waltonModuleDefinition =
 {
     PyModuleDef_HEAD_INIT,
-    "walton_module",                // Name of the module.
-    "Description of the module",    // Module documentation, may be NULL.
-    -1,                             // Size of per-interpreter state of the module, of -1 if the module keeps state in global variables.
+    // Name of the module.
+    "walton_module",
+    // Module documentation, may be NULL.
+    "Description of the walton_module module.",
+    // Size of per-interpreter state of the module, of -1 if the module keeps state in global variables.
+    -1,
     waltonModuleMethods
 };
 
