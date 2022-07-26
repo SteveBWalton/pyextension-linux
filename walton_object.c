@@ -1,3 +1,4 @@
+/// The C structure to hold the data for a Walton object.
 typedef struct
 {
     PyObject_HEAD
@@ -10,7 +11,111 @@ typedef struct
 
 
 
-static void Walton_dealloc
+/// The definition of the members of Walton objects.
+/// The members with getters and setters are not listed here (first & last).
+static PyMemberDef waltonMembers[] =
+{
+    {"height", T_DOUBLE, offsetof(WaltonObject, height), 0, "Height (m)."},
+    {"number", T_INT, offsetof(WaltonObject, number), 0, "Custom number."},
+    {NULL}  /* Sentinel */
+};
+
+
+
+/// Getter for the first member.
+static PyObject*  waltonGetFirst
+(
+    WaltonObject*   self,
+    void*           closure
+)
+{
+    Py_INCREF(self->first);
+    return self->first;
+}
+
+
+
+/// Setter for the first member.
+static int waltonSetFirst
+(
+    WaltonObject*   self,
+    PyObject*       value,
+    void*           closure
+)
+{
+    PyObject *tmp;
+    if (value == NULL)
+    {
+        PyErr_SetString(PyExc_TypeError, "Cannot delete the first attribute");
+        return -1;
+    }
+    if (!PyUnicode_Check(value))
+    {
+        PyErr_SetString(PyExc_TypeError, "The first attribute value must be a string");
+        return -1;
+    }
+    tmp = self->first;
+    Py_INCREF(value);
+    self->first = value;
+    Py_DECREF(tmp);
+    return 0;
+}
+
+
+
+/// Getter for the last member.
+static PyObject* waltonGetLast
+(
+    WaltonObject*   self,
+    void*           closure
+)
+{
+    Py_INCREF(self->last);
+    return self->last;
+}
+
+
+
+/// Setter for the first member.
+static int waltonSetLast
+(
+    WaltonObject*   self,
+    PyObject*       value,
+    void*           closure
+)
+{
+    PyObject *tmp;
+    if (value == NULL)
+    {
+        PyErr_SetString(PyExc_TypeError, "Cannot delete the last attribute");
+        return -1;
+    }
+    if (!PyUnicode_Check(value))
+    {
+        PyErr_SetString(PyExc_TypeError, "The last attribute value must be a string");
+        return -1;
+    }
+    tmp = self->last;
+    Py_INCREF(value);
+    self->last = value;
+    Py_DECREF(tmp);
+    return 0;
+}
+
+
+
+/// Definition of the setters for the Walton objects.
+static PyGetSetDef waltonGetSetters[] =
+{
+    {"first", (getter)waltonGetFirst, (setter)waltonSetFirst, "First name.", NULL},
+    {"last", (getter)waltonGetLast, (setter)waltonSetLast, "Last name.", NULL},
+    {NULL}  /* Sentinel */
+};
+
+
+
+/// Method to release the Walton object.
+static void waltonDealloc
 (
     WaltonObject* self
 )
@@ -21,7 +126,9 @@ static void Walton_dealloc
 }
 
 
-static PyObject* Walton_new
+
+/// Method to create a new Walton object.
+static PyObject* waltonNew
 (
     PyTypeObject*   type,
     PyObject*       args,
@@ -52,7 +159,8 @@ static PyObject* Walton_new
 
 
 
-static int Walton_init
+/// Method to initialise a Walton object.
+static int waltonInit
 (
     WaltonObject*   self,
     PyObject*       args,
@@ -62,7 +170,7 @@ static int Walton_init
     static char *kwlist[] = {"first", "last", "height", "number", NULL};
     PyObject *first = NULL, *last = NULL, *tmp;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|OOdi", kwlist, &first, &last, &self->height, &self->number))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|UUdi", kwlist, &first, &last, &self->height, &self->number))
     {
         return -1;
     }
@@ -86,18 +194,8 @@ static int Walton_init
 
 
 
-static PyMemberDef Walton_members[] =
-{
-    {"first", T_OBJECT_EX, offsetof(WaltonObject, first), 0, "first name"},
-    {"last", T_OBJECT_EX, offsetof(WaltonObject, last), 0, "last name"},
-    {"height", T_DOUBLE, offsetof(WaltonObject, height), 0, "height float"},
-    {"number", T_INT, offsetof(WaltonObject, number), 0, "custom number"},
-    {NULL}  /* Sentinel */
-};
-
-
-
-static PyObject* Walton_name
+/// The name method of the Walton object.
+static PyObject* waltonName
 (
     WaltonObject*   self,
     PyObject*       Py_UNUSED(ignored)
@@ -118,15 +216,16 @@ static PyObject* Walton_name
 
 
 
-static PyMethodDef Walton_methods[] =
+/// Defintion of the methods of the Walton object.
+static PyMethodDef waltonMethods[] =
 {
-    {"name", (PyCFunction)Walton_name, METH_NOARGS, "Return the name, combining the first and last name" },
+    {"name", (PyCFunction)waltonName, METH_NOARGS, "Return the name, combining the first and last name" },
     {NULL}  /* Sentinel */
 };
 
 
 
-static PyTypeObject WaltonType =
+static PyTypeObject waltonType =
 {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "walton_module.Walton",
@@ -134,9 +233,10 @@ static PyTypeObject WaltonType =
     .tp_basicsize = sizeof(WaltonObject),
     .tp_itemsize = 0,
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-    .tp_new = Walton_new,
-    .tp_init = (initproc)Walton_init,
-    .tp_dealloc = (destructor)Walton_dealloc,
-    .tp_members = Walton_members,
-    .tp_methods = Walton_methods,
+    .tp_new = waltonNew,
+    .tp_init = (initproc)waltonInit,
+    .tp_dealloc = (destructor)waltonDealloc,
+    .tp_members = waltonMembers,
+    .tp_methods = waltonMethods,
+    .tp_getset = waltonGetSetters,
 };
