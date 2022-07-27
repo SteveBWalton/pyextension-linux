@@ -3,8 +3,8 @@ typedef struct
 {
     PyObject_HEAD
 
-    PyObject*   first;
-    PyObject*   last;
+    PyObject*   first;      // Python variable that we fix as a string.
+    PyObject*   last;       // Python variable that we fix as a string.
     double      height;
     int         number;
 } WaltonObject;
@@ -225,7 +225,8 @@ static PyMethodDef waltonMethods[] =
 
 
 
-static PyTypeObject waltonType =
+/// The definition of the Walton object.
+static PyTypeObject waltonObjectDefinition =
 {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "walton_module.Walton",

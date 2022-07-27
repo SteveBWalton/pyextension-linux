@@ -59,12 +59,13 @@ static struct PyModuleDef waltonModuleDefinition =
 
 
 /// Module initation.
+/// Function name comes from the module name in waltonModuleDefinition.
 PyMODINIT_FUNC PyInit_walton_module(void)
 {
     Py_Initialize();
 
-    // Initialises the WaltonType.
-    if (PyType_Ready(&waltonType) < 0)
+    // Initialises the Walton object.
+    if (PyType_Ready(&waltonObjectDefinition) < 0)
     {
         return NULL;
     }
@@ -80,11 +81,11 @@ PyMODINIT_FUNC PyInit_walton_module(void)
     PyModule_AddIntConstant(module, "TEST", 1);
     PyModule_AddIntMacro(module, STEVE);
 
-    // Add the object to the module.
-    Py_INCREF(&waltonType);
-    if (PyModule_AddObject(module, "Walton", (PyObject*)&waltonType) < 0)
+    // Add the Walton object to the module.
+    Py_INCREF(&waltonObjectDefinition);
+    if (PyModule_AddObject(module, "Walton", (PyObject*)&waltonObjectDefinition) < 0)
     {
-        Py_DECREF(&waltonType);
+        Py_DECREF(&waltonObjectDefinition);
         Py_DECREF(module);
         return NULL;
     }
