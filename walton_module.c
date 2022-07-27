@@ -5,11 +5,11 @@
 #define STEVE 20
 
 
-/// Defines function calculate() that will be exported to Python as walton_test.calculate().
+/// Defines function calculate() that will be exported to Python as walton_module.calculate().
 static PyObject* waltonModuleCalculate
 (
     PyObject* self,
-    PyObject* args
+    PyObject* args      // Specifies the Python arguments to the calculate() function.
 )
 {
     // Fetch the 2 double parameters.
@@ -23,8 +23,6 @@ static PyObject* waltonModuleCalculate
 
     // Return success.
     return PyFloat_FromDouble(argOne * argTwo);
-    // int returnCode = 1;
-    // return PyLong_FromLong(returnCode);
 }
 
 
