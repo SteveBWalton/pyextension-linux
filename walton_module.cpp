@@ -52,7 +52,7 @@ static struct PyModuleDef waltonModuleDefinition =
 
 
 // This inlines the code for the Walton object.
-#include "walton_object.c"
+#include "walton_object.cpp"
 
 
 

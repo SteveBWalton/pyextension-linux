@@ -167,7 +167,7 @@ static int waltonInit
     PyObject*       kwds
 )
 {
-    static char *kwlist[] = {"first", "last", "height", "number", NULL};
+    const char *kwlist[] = {"first", "last", "height", "number", NULL};
     PyObject *first = NULL, *last = NULL, *tmp;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "|UUdi", kwlist, &first, &last, &self->height, &self->number))
@@ -230,14 +230,14 @@ static PyTypeObject waltonObjectDefinition =
 {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "walton_module.Walton",
-    .tp_doc = PyDoc_STR("Description of Walton objects."),
     .tp_basicsize = sizeof(WaltonObject),
     .tp_itemsize = 0,
-    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-    .tp_new = waltonNew,
-    .tp_init = (initproc)waltonInit,
     .tp_dealloc = (destructor)waltonDealloc,
-    .tp_members = waltonMembers,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    .tp_doc = PyDoc_STR("Description of Walton objects."),
     .tp_methods = waltonMethods,
+    .tp_members = waltonMembers,
     .tp_getset = waltonGetSetters,
+    .tp_init = (initproc)waltonInit,
+    .tp_new = waltonNew,
 };
