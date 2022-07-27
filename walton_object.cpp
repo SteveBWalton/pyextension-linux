@@ -114,14 +114,54 @@ static PyGetSetDef waltonGetSetters[] =
 
 
 
+/// Help the GC search for cycles by registering each subobject that could participate in cycles.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+static int waltonTraverse
+(
+    WaltonObject*   self,
+    visitproc       visit,  /// Name is fixed to use Py_VISIT.
+    void*           arg     /// Name is fixed to use Py_VISIT.
+)
+{
+    Py_VISIT(self->first);
+    Py_VISIT(self->last);
+    return 0;
+}
+#pragma GCC diagnostic pop
+
+
+
+
+/// Release the Python variables in a GC safe way.
+static int waltonClear
+(
+    WaltonObject*   self
+)
+{
+    Py_CLEAR(self->first);
+    Py_CLEAR(self->last);
+    return 0;
+}
+
+
+
 /// Method to release the Walton object.
 static void waltonDealloc
 (
     WaltonObject* self
 )
 {
+#if 0
+    // If not using waltonTraverse, waltonClear and Py_TPFLAGS_HAVE_GC then this is okay.
     Py_XDECREF(self->first);
     Py_XDECREF(self->last);
+#else
+    // This is the waltonTraverse and waltonClear (GC) version.
+    PyObject_GC_UnTrack(self);
+    waltonClear(self);
+#endif
+
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -170,7 +210,7 @@ static int waltonInit
     const char *kwlist[] = {"first", "last", "height", "number", NULL};
     PyObject *first = NULL, *last = NULL, *tmp;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|UUdi", kwlist, &first, &last, &self->height, &self->number))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|UUdi", (char**)kwlist, &first, &last, &self->height, &self->number))
     {
         return -1;
     }
@@ -226,6 +266,8 @@ static PyMethodDef waltonMethods[] =
 
 
 /// The definition of the Walton object.
+/// In C++ the order of these is important and will not compile in the wrong order.
+/// In C this will compile in any order.
 static PyTypeObject waltonObjectDefinition =
 {
     PyVarObject_HEAD_INIT(NULL, 0)
@@ -233,8 +275,10 @@ static PyTypeObject waltonObjectDefinition =
     .tp_basicsize = sizeof(WaltonObject),
     .tp_itemsize = 0,
     .tp_dealloc = (destructor)waltonDealloc,
-    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC,
     .tp_doc = PyDoc_STR("Description of Walton objects."),
+    .tp_traverse = (traverseproc)waltonTraverse,
+    .tp_clear = (inquiry)waltonClear,
     .tp_methods = waltonMethods,
     .tp_members = waltonMembers,
     .tp_getset = waltonGetSetters,
