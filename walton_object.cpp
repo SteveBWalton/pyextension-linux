@@ -5,7 +5,7 @@ typedef struct
 
     PyObject*   first;      // Python variable that we fix as a string.
     PyObject*   last;       // Python variable that we fix as a string.
-    double      height;
+    double      height;     //
     int         number;
 } WaltonObject;
 
@@ -256,10 +256,35 @@ static PyObject* waltonName
 
 
 
+
+/// Defines function calculate() that will be a method of the Walton object.
+static PyObject* waltonCalculate
+(
+    WaltonObject* self, // Specifies the C structiure.
+    PyObject*     args  // Specifies the Python arguments to the calculate() function.
+)
+{
+    // Fetch the 2 double parameters.
+    double argOne;
+    double argTwo;
+    if (!PyArg_ParseTuple(args, "dd", &argOne, &argTwo))
+    {
+        // Parameters are wrong.
+        return NULL;
+    }
+
+    // Return success.
+    return PyFloat_FromDouble(self->height * argOne * argTwo);
+}
+
+
+
+
 /// Defintion of the methods of the Walton object.
 static PyMethodDef waltonMethods[] =
 {
     {"name", (PyCFunction)waltonName, METH_NOARGS, "Return the name, combining the first and last name." },
+    {"calculate", (PyCFunction)waltonCalculate, METH_VARARGS, "Return the height muliplied by the two double arguments." },
     {NULL}  /* Sentinel */
 };
 
