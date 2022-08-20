@@ -3,6 +3,7 @@ bin/
 build/
 dist/
 obj/
+walton_package.egg-info/
 
 # Files
 files.txt
